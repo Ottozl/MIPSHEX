@@ -10,7 +10,1933 @@ internal static class Program
     private static void Main()
     {
         string source = @"
-           lhu $s6, 12($s0)
+           addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
+addiu $a0, $a0, -752
+sw $a1, 0($a0)
+sw $a2, 4($a0)
+sw $a3, 8($a0)
+sw $t0, 12($a0)
+sw $t5, 16($a0)
+sw $t6, 20($a0)
+sw $s3, 24($a0)
+sw $s4, 28($a0)
+sw $s5, 32($a0)
+sw $s6, 36($a0)
+sw $s7, 40($a0)
+sw $ra, 48($a0)
+j 0x801D99B8
+lhu $s6, 12($s0)
+lui $a0, 32797
+addiu $a0, $a0, -752
+lw $a1, 0($a0)
+lw $a2, 4($a0)
+lw $a3, 8($a0)
+lw $t0, 12($a0)
+lw $t5, 16($a0)
+lw $t6, 20($a0)
+lw $s3, 24($a0)
+lw $s4, 28($a0)
+lw $s5, 32($a0)
+lw $s6, 36($a0)
+lw $s7, 40($a0)
+j 0x8001B5E4
+addu $a0, $s1, $zero
+lhu $s6, 12($s0)
+addiu $t5, $zero, 0
+lui $s4, 0x801D
+addiu $s4, $s4, 0x4240
+sll $s7, $s6, 2
+addu $s4, $s4, $s7
+lw $a2, 0($s4)
+srl $a1, $a2, 26
+lui $s4, 0x801D
+ori $s4, $s4, 0x9920
+lw $s5, 0($s4)
         ";
 
         var hex = ConvertMipsToHex(source);

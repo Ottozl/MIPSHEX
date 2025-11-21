@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="HEXtoMpis/HEXtoMPIS.csproj" Id="e67c8229-7a3d-40f8-b545-8da3e57c2747" />
   <Project Path="MIPStoHEX/MIPStoHEX.csproj" />
 </Solution>

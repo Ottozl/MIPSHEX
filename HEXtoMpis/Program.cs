@@ -11,11 +11,32 @@ internal static class Program
     {
         var hexLines = new[]
         {
-            @"50 53 2D 58"
+            @"10 FD 84 24
+00 00 85 AC
+04 00 86 AC
+08 00 87 AC
+0C 00 88 AC
+10 00 8D AC
+14 00 8E AC
+18 00 93 AC
+1C 00 94 AC
+20 00 95 AC
+24 00 96 AC
+28 00 97 AC
+30 00 9F AC
+0C 00 16 96
+01 00 17 24
+1A 00 F6 12
+00 00 00 00
+02 00 17 24
+17 00 F6 12
+00 00 00 00"
         };
 
-        var asm = ConvertHexToMips(hexLines, littleEndian: true);
-        foreach (var a in asm)
+        // exemplo usando slus offset
+        var slusStart = "1CA140";
+        var asmWithOffsets = ConvertHexToMipsWithOffsets(slusStart, hexLines, littleEndian: true);
+        foreach (var a in asmWithOffsets)
             Console.WriteLine(a);
         Console.ReadLine();
     }
@@ -47,6 +68,59 @@ internal static class Program
                 }
             }
         }
+        return outList;
+    }
+
+    // New: Convert hex list to MIPS assembly while also printing SLUS and RAM offsets per line.
+    // slusStartHex accepts strings like "1CA140" or "0x1CA140". ramOffset = slus + 0x8000F800.
+    public static List<string> ConvertHexToMipsWithOffsets(string slusStartHex, IEnumerable<string> hexLines, bool littleEndian = true)
+    {
+        if (hexLines == null) throw new ArgumentNullException(nameof(hexLines));
+        if (string.IsNullOrWhiteSpace(slusStartHex)) throw new ArgumentNullException(nameof(slusStartHex));
+
+        // normalize and parse slus start
+        var s = slusStartHex.Trim();
+        if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) s = s.Substring(2);
+        int slusStart;
+        try
+        {
+            slusStart = int.Parse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+        }
+        catch (Exception ex)
+        {
+            throw new FormatException($"SLUS offset inválido: {slusStartHex}", ex);
+        }
+
+        var outList = new List<string>();
+        int currentSlus = slusStart;
+        const uint ramBase = 0x8000F800u;
+
+        foreach (var raw in hexLines)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) continue;
+            var subLines = raw.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                              .Select(l => l.Trim())
+                              .Where(l => !string.IsNullOrWhiteSpace(l));
+            foreach (var line in subLines)
+            {
+                try
+                {
+                    uint word = ParseHexWord(line, littleEndian);
+                    string asm = DecodeWord(word);
+                    uint ramOffset = (uint)currentSlus + ramBase;
+                    // format SLUS as 6 hex digits and RAM as 8 hex digits, uppercase
+                    string slusStr = currentSlus.ToString("X6");
+                    string ramStr = ramOffset.ToString("X8");
+                    outList.Add($"{slusStr}; {ramStr}; {asm}");
+                }
+                catch (Exception ex)
+                {
+                    outList.Add($".error \"{ex.Message} (line: {line})\"");
+                }
+                currentSlus += 4;
+            }
+        }
+
         return outList;
     }
 

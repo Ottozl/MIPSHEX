@@ -11,13 +11,13 @@ internal static class Program
     {
         var hexLines = new[]
         {
-            @"00 00 85 AC
-04 00 86 AC"
+            @"50 53 2D 58"
         };
 
         var asm = ConvertHexToMips(hexLines, littleEndian: true);
         foreach (var a in asm)
             Console.WriteLine(a);
+        Console.ReadLine();
     }
 
     // Convert a sequence of hex representations to MIPS assembly lines.
@@ -116,24 +116,24 @@ internal static class Program
             case 0x00: // R-type
                 switch (funct)
                 {
-                    case 0x20: return $"add {RegName(rd)},{RegName(rs)},{RegName(rt)}";
-                    case 0x21: return $"addu {RegName(rd)},{RegName(rs)},{RegName(rt)}";
-                    case 0x22: return $"sub {RegName(rd)},{RegName(rs)},{RegName(rt)}";
-                    case 0x23: return $"subu {RegName(rd)},{RegName(rs)},{RegName(rt)}";
-                    case 0x24: return $"and {RegName(rd)},{RegName(rs)},{RegName(rt)}";
-                    case 0x25: return $"or {RegName(rd)},{RegName(rs)},{RegName(rt)}";
-                    case 0x00: return $"sll {RegName(rd)},{RegName(rt)},{shamt}";
-                    case 0x02: return $"srl {RegName(rd)},{RegName(rt)},{shamt}";
-                    case 0x09: return $"jalr {RegName(rd)},{RegName(rs)}";
+                    case 0x20: return $"add {RegName(rd)}, {RegName(rs)}, {RegName(rt)}";
+                    case 0x21: return $"addu {RegName(rd)}, {RegName(rs)}, {RegName(rt)}";
+                    case 0x22: return $"sub {RegName(rd)}, {RegName(rs)}, {RegName(rt)}";
+                    case 0x23: return $"subu {RegName(rd)}, {RegName(rs)}, {RegName(rt)}";
+                    case 0x24: return $"and {RegName(rd)}, {RegName(rs)}, {RegName(rt)}";
+                    case 0x25: return $"or {RegName(rd)}, {RegName(rs)}, {RegName(rt)}";
+                    case 0x00: return $"sll {RegName(rd)}, {RegName(rt)}, {shamt}";
+                    case 0x02: return $"srl {RegName(rd)}, {RegName(rt)}, {shamt}";
+                    case 0x09: return $"jalr {RegName(rd)}, {RegName(rs)}";
                     case 0x08: return $"jr {RegName(rs)}";
                     case 0x10: return $"mfhi {RegName(rd)}";
                     case 0x12: return $"mflo {RegName(rd)}";
                     case 0x11: return $"mthi {RegName(rs)}";
                     case 0x13: return $"mtlo {RegName(rs)}";
-                    case 0x18: return $"mult {RegName(rs)},{RegName(rt)}";
-                    case 0x19: return $"multu {RegName(rs)},{RegName(rt)}";
-                    case 0x1A: return $"div {RegName(rs)},{RegName(rt)}";
-                    case 0x1B: return $"divu {RegName(rs)},{RegName(rt)}";
+                    case 0x18: return $"mult {RegName(rs)}, {RegName(rt)}";
+                    case 0x19: return $"multu {RegName(rs)}, {RegName(rt)}";
+                    case 0x1A: return $"div {RegName(rs)}, {RegName(rt)}";
+                    case 0x1B: return $"divu {RegName(rs)}, {RegName(rt)}";
                     case 0x0C: return "syscall";
                     case 0x0D: return "break";
                     default:
@@ -145,35 +145,35 @@ internal static class Program
             case 0x03: // jal
                 return $"jal 0x{(addr26 << 2):X8}";
 
-            case 0x04: return $"beq {RegName(rs)},{RegName(rt)},{imm}";
-            case 0x05: return $"bne {RegName(rs)},{RegName(rt)},{imm}";
-            case 0x06: return $"blez {RegName(rs)},{imm}";
-            case 0x07: return $"bgtz {RegName(rs)},{imm}";
+            case 0x04: return $"beq {RegName(rs)}, {RegName(rt)}, {imm}";
+            case 0x05: return $"bne {RegName(rs)}, {RegName(rt)}, {imm}";
+            case 0x06: return $"blez {RegName(rs)}, {imm}";
+            case 0x07: return $"bgtz {RegName(rs)}, {imm}";
 
-            case 0x08: return $"addi {RegName(rt)},{RegName(rs)},{imm}";
-            case 0x09: return $"addiu {RegName(rt)},{RegName(rs)},{imm}";
-            case 0x0A: return $"slti {RegName(rt)},{RegName(rs)},{imm}";
-            case 0x0B: return $"sltiu {RegName(rt)},{RegName(rs)},{imm}";
-            case 0x0C: return $"andi {RegName(rt)},{RegName(rs)},0x{uimm:X4}";
-            case 0x0D: return $"ori {RegName(rt)},{RegName(rs)},0x{uimm:X4}";
-            case 0x0F: return $"lui {RegName(rt)},0x{uimm:X4}";
+            case 0x08: return $"addi {RegName(rt)}, {RegName(rs)}, {imm}";
+            case 0x09: return $"addiu {RegName(rt)}, {RegName(rs)}, {imm}";
+            case 0x0A: return $"slti {RegName(rt)}, {RegName(rs)}, {imm}";
+            case 0x0B: return $"sltiu {RegName(rt)}, {RegName(rs)}, {imm}";
+            case 0x0C: return $"andi {RegName(rt)}, {RegName(rs)}, 0x{uimm:X4}";
+            case 0x0D: return $"ori {RegName(rt)}, {RegName(rs)}, 0x{uimm:X4}";
+            case 0x0F: return $"lui {RegName(rt)}, 0x{uimm:X4}";
 
-            case 0x20: return $"lb {RegName(rt)},{imm}({RegName(rs)})";
-            case 0x21: return $"lh {RegName(rt)},{imm}({RegName(rs)})";
-            case 0x23: return $"lw {RegName(rt)},{imm}({RegName(rs)})";
-            case 0x24: return $"lbu {RegName(rt)},{imm}({RegName(rs)})";
-            case 0x25: return $"lhu {RegName(rt)},{imm}({RegName(rs)})";
-            case 0x28: return $"sb {RegName(rt)},{imm}({RegName(rs)})";
-            case 0x29: return $"sh {RegName(rt)},{imm}({RegName(rs)})";
-            case 0x2B: return $"sw {RegName(rt)},{imm}({RegName(rs)})";
+            case 0x20: return $"lb {RegName(rt)}, {imm}({RegName(rs)})";
+            case 0x21: return $"lh {RegName(rt)}, {imm}({RegName(rs)})";
+            case 0x23: return $"lw {RegName(rt)}, {imm}({RegName(rs)})";
+            case 0x24: return $"lbu {RegName(rt)}, {imm}({RegName(rs)})";
+            case 0x25: return $"lhu {RegName(rt)}, {imm}({RegName(rs)})";
+            case 0x28: return $"sb {RegName(rt)}, {imm}({RegName(rs)})";
+            case 0x29: return $"sh {RegName(rt)}, {imm}({RegName(rs)})";
+            case 0x2B: return $"sw {RegName(rt)}, {imm}({RegName(rs)})";
 
             case 0x01: // REGIMM
                 switch (rt)
                 {
-                    case 0x00: return $"bltz {RegName(rs)},{imm}";
-                    case 0x01: return $"bgez {RegName(rs)},{imm}";
-                    case 0x10: return $"bltzal {RegName(rs)},{imm}";
-                    case 0x11: return $"bgezal {RegName(rs)},{imm}";
+                    case 0x00: return $"bltz {RegName(rs)}, {imm}";
+                    case 0x01: return $"bgez {RegName(rs)}, {imm}";
+                    case 0x10: return $"bltzal {RegName(rs)}, {imm}";
+                    case 0x11: return $"bgezal {RegName(rs)}, {imm}";
                     default: return $"regimm rt=0x{rt:X} rs={RegName(rs)} imm={imm}";
                 }
 

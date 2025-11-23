@@ -11,34 +11,30 @@ internal static class Program
     {
         var hexLines = new[]
         {
-            @"10 FD 84 24
-00 00 85 AC
-04 00 86 AC
-08 00 87 AC
-0C 00 88 AC
-10 00 8D AC
-14 00 8E AC
-18 00 93 AC
-1C 00 94 AC
-20 00 95 AC
-24 00 96 AC
-28 00 97 AC
-30 00 9F AC
-0C 00 16 96
-01 00 17 24
-1A 00 F6 12
+            @"04 00 00 11
 00 00 00 00
-02 00 17 24
-17 00 F6 12
-00 00 00 00"
+48 02 88 97
+02 00 16 11
+00 00 00 00
+CD 02 87 93"
         };
 
         // exemplo usando slus offset
-        var slusStart = "1CA140";
+        var slusStart = "00000000";
         var asmWithOffsets = ConvertHexToMipsWithOffsets(slusStart, hexLines, littleEndian: true);
+        int printed = 0;
+        const int pageSize = 9000;
         foreach (var a in asmWithOffsets)
+        {
             Console.WriteLine(a);
-        Console.ReadLine();
+            printed++;
+            if (printed % pageSize == 0)
+            {
+                Console.WriteLine("-- Pressione Enter para continuar...");
+                Console.ReadLine();
+                try { Console.Clear(); } catch { /* ignore if no console available */ }
+            }
+        }
     }
 
     // Convert a sequence of hex representations to MIPS assembly lines.
@@ -111,7 +107,24 @@ internal static class Program
                     // format SLUS as 6 hex digits and RAM as 8 hex digits, uppercase
                     string slusStr = currentSlus.ToString("X6");
                     string ramStr = ramOffset.ToString("X8");
-                    outList.Add($"{slusStr}; {ramStr}; {asm}");
+
+                    // If this is a branch (beq or beqz represented as beq with $zero), compute and append target SLUS and RAM
+                    string branchSuffix = string.Empty;
+                    // detect beq (including beq ...,$zero,... which is beqz semantic)
+                    if (asm.StartsWith("beq ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // immediate is lower 16 bits, signed, indicates number of instructions to jump relative to next instruction
+                        int imm = (short)(word & 0xFFFF);
+                        // current instruction RAM address
+                        uint ramCurr = ramOffset;
+                        uint ramNext = ramCurr + 4u;
+                        long targetRamSigned = (long)ramNext + (long)imm * 4L;
+                        uint targetRam = (uint)targetRamSigned;
+                        uint targetSlus = targetRam - ramBase;
+                        branchSuffix = $" ({targetSlus:X6}) [{targetRam:X8}]";
+                    }
+
+                    outList.Add($"{slusStr}; {ramStr}; {asm}{branchSuffix}");
                 }
                 catch (Exception ex)
                 {
@@ -215,19 +228,27 @@ internal static class Program
                 }
 
             case 0x02: // j
-                return $"j 0x{(addr26 << 2):X8}";
+                {
+                    uint ramAddr = ((addr26 << 2) | 0x80000000u);
+                    uint slus = ramAddr - 0x8000F800u;
+                    return $"j 0x{ramAddr:X8} ({slus:X6})";
+                }
             case 0x03: // jal
-                return $"jal 0x{(addr26 << 2):X8}";
+                {
+                    uint ramAddr = ((addr26 << 2) | 0x80000000u);
+                    uint slus = ramAddr - 0x8000F800u;
+                    return $"jal 0x{ramAddr:X8} ({slus:X6})";
+                }
 
             case 0x04: return $"beq {RegName(rs)}, {RegName(rt)}, {imm}";
             case 0x05: return $"bne {RegName(rs)}, {RegName(rt)}, {imm}";
             case 0x06: return $"blez {RegName(rs)}, {imm}";
             case 0x07: return $"bgtz {RegName(rs)}, {imm}";
 
-            case 0x08: return $"addi {RegName(rt)}, {RegName(rs)}, {imm}";
-            case 0x09: return $"addiu {RegName(rt)}, {RegName(rs)}, {imm}";
-            case 0x0A: return $"slti {RegName(rt)}, {RegName(rs)}, {imm}";
-            case 0x0B: return $"sltiu {RegName(rt)}, {RegName(rs)}, {imm}";
+            case 0x08: return $"addi {RegName(rt)}, {RegName(rs)}, {imm} [0x{uimm:X4}]";
+            case 0x09: return $"addiu {RegName(rt)}, {RegName(rs)}, {imm} [0x{uimm:X4}]";
+            case 0x0A: return $"slti {RegName(rt)}, {RegName(rs)}, {imm} [0x{uimm:X4}]";
+            case 0x0B: return $"sltiu {RegName(rt)}, {RegName(rs)}, {imm} [0x{uimm:X4}]";
             case 0x0C: return $"andi {RegName(rt)}, {RegName(rs)}, 0x{uimm:X4}";
             case 0x0D: return $"ori {RegName(rt)}, {RegName(rs)}, 0x{uimm:X4}";
             case 0x0F: return $"lui {RegName(rt)}, 0x{uimm:X4}";

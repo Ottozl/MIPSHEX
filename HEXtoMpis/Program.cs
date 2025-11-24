@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.IO;
 
 // Small utility to convert HEX words to MIPS assembly (supports many common R/I/J instructions)
 internal static class Program
@@ -22,18 +23,73 @@ CD 02 87 93"
         // exemplo usando slus offset
         var slusStart = "00000000";
         var asmWithOffsets = ConvertHexToMipsWithOffsets(slusStart, hexLines, littleEndian: true);
-        int printed = 0;
-        const int pageSize = 9000;
-        foreach (var a in asmWithOffsets)
+
+        // create timestamped output filename so each run produces a new file
+        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
+        // find repository root by walking up until we find a .git folder or a .sln file
+        string repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
+        string outputsDir = Path.Combine(repoRoot, "outputs/HEX-MIPS");
+        Directory.CreateDirectory(outputsDir);
+
+        var outPath = Path.Combine(outputsDir, $"output_{timestamp}.csv");
+
+        using (var sw = new StreamWriter(outPath, false, System.Text.Encoding.UTF8))
         {
-            Console.WriteLine(a);
-            printed++;
-            if (printed % pageSize == 0)
+            sw.WriteLine("SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM");
+
+            foreach (var a in asmWithOffsets)
             {
-                Console.WriteLine("-- Pressione Enter para continuar...");
-                Console.ReadLine();
-                try { Console.Clear(); } catch { /* ignore if no console available */ }
+                // expected format: "SLUS; RAM; ASM( maybe branchSuffix )"
+                var parts = a.Split(new[] { ';' }, 3);
+                string slus = parts.Length > 0 ? parts[0].Trim() : string.Empty;
+                string ram = parts.Length > 1 ? parts[1].Trim() : string.Empty;
+                string asmAndBranch = parts.Length > 2 ? parts[2].Trim() : string.Empty;
+
+                string asmField = asmAndBranch;
+                string branchSlus = string.Empty;
+                string branchRam = string.Empty;
+
+                // match suffix like: " (TARGETSLUS) [TARGETRAM]" at end
+                var m = Regex.Match(asmAndBranch, "\\s*\\((?<bslus>[0-9A-Fa-f]{1,8})\\)\\s*\\[(?<bram>[0-9A-Fa-f]{1,8})\\]$");
+                if (m.Success)
+                {
+                    branchSlus = m.Groups["bslus"].Value;
+                    branchRam = m.Groups["bram"].Value;
+                    asmField = asmAndBranch.Substring(0, m.Index).TrimEnd();
+                }
+
+                // escape quotes for CSV and wrap ASM field in quotes
+                asmField = "\"" + asmField.Replace("\"", "\"\"") + "\"";
+
+                sw.WriteLine($"{slus},{ram},{asmField},{branchSlus},{branchRam}");
             }
+        }
+
+        Console.WriteLine($"Wrote {asmWithOffsets.Count} lines to {Path.GetFullPath(outPath)}");
+
+        // local function to locate repository root
+        static string FindRepoRoot(string start)
+        {
+            try
+            {
+                var dir = new DirectoryInfo(start);
+                for (int i = 0; i < 20 && dir != null; i++)
+                {
+                    if (Directory.Exists(Path.Combine(dir.FullName, ".git")))
+                        return dir.FullName;
+
+                    if (Directory.EnumerateFiles(dir.FullName, "*.sln").Any())
+                        return dir.FullName;
+
+                    dir = dir.Parent;
+                }
+            }
+            catch
+            {
+                // ignore and fallback to start
+            }
+            return start;
         }
     }
 

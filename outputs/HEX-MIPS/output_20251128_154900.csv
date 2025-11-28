@@ -1,0 +1,2 @@
+﻿HEX,SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM
+01 00 17 24,1CA140,801D9940,"addiu $s7, $zero, 1 [0x0001]",,

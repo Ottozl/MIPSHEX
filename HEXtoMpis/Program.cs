@@ -12,16 +12,25 @@ internal static class Program
     {
         var hexLines = new[]
         {
-            @"04 00 00 11
+            @"01 00 17 24
+09 00 D7 12
+02 00 17 24
+00 00 D7 12
+03 00 17 24
+00 00 D7 12
+04 00 17 24
+00 00 D7 12
 00 00 00 00
-48 02 88 97
-02 00 16 11
+5F 66 07 08
 00 00 00 00
-CD 02 87 93"
+1A 80 0C 3C
+1A 80 0D 3C
+CD 02 87 93
+             "
         };
 
         // exemplo usando slus offset
-        var slusStart = "00000000";
+        var slusStart = "1CA1B8";
         var asmWithOffsets = ConvertHexToMipsWithOffsets(slusStart, hexLines, littleEndian: true);
 
         // create timestamped output filename so each run produces a new file
@@ -34,17 +43,21 @@ CD 02 87 93"
 
         var outPath = Path.Combine(outputsDir, $"output_{timestamp}.csv");
 
+        // temporary: print CSV header to file and console (first column = original HEX), keep identical remaining columns
         using (var sw = new StreamWriter(outPath, false, System.Text.Encoding.UTF8))
         {
-            sw.WriteLine("SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM");
+            sw.WriteLine("HEX,SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM");
+
+            Console.WriteLine("HEX,SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM");
 
             foreach (var a in asmWithOffsets)
             {
-                // expected format: "SLUS; RAM; ASM( maybe branchSuffix )"
-                var parts = a.Split(new[] { ';' }, 3);
-                string slus = parts.Length > 0 ? parts[0].Trim() : string.Empty;
-                string ram = parts.Length > 1 ? parts[1].Trim() : string.Empty;
-                string asmAndBranch = parts.Length > 2 ? parts[2].Trim() : string.Empty;
+                // expected format now: "HEX; SLUS; RAM; ASM( maybe branchSuffix )"
+                var parts = a.Split(new[] { ';' }, 4);
+                string hex = parts.Length > 0 ? parts[0].Trim() : string.Empty;
+                string slus = parts.Length > 1 ? parts[1].Trim() : string.Empty;
+                string ram = parts.Length > 2 ? parts[2].Trim() : string.Empty;
+                string asmAndBranch = parts.Length > 3 ? parts[3].Trim() : string.Empty;
 
                 string asmField = asmAndBranch;
                 string branchSlus = string.Empty;
@@ -62,11 +75,13 @@ CD 02 87 93"
                 // escape quotes for CSV and wrap ASM field in quotes
                 asmField = "\"" + asmField.Replace("\"", "\"\"") + "\"";
 
-                sw.WriteLine($"{slus},{ram},{asmField},{branchSlus},{branchRam}");
+                sw.WriteLine($"{hex},{slus},{ram},{asmField},{branchSlus},{branchRam}");
+                Console.WriteLine($"{hex},{slus},{ram},{asmField},{branchSlus},{branchRam}");
             }
         }
 
         Console.WriteLine($"Wrote {asmWithOffsets.Count} lines to {Path.GetFullPath(outPath)}");
+        Console.WriteLine($"Wrote {asmWithOffsets.Count} lines (printed to console)");
 
         // local function to locate repository root
         static string FindRepoRoot(string start)
@@ -133,61 +148,302 @@ CD 02 87 93"
         // normalize and parse slus start
         var s = slusStartHex.Trim();
         if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) s = s.Substring(2);
-        int slusStart;
-        try
+        if (!int.TryParse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int slusStart))
+            throw new FormatException($"SLUS offset inválido: {slusStartHex}");
+
+        // initial register state (hardcoded values)
+        uint reg_zero = 0;
+        uint reg_at = 0;
+        uint reg_v0 = 0;
+        uint reg_v1 = 0;
+        uint reg_a0 = 0;
+        uint reg_a1 = 0;
+        uint reg_a2 = 0;
+        uint reg_a3 = 0;
+        uint reg_t0 = 0;
+        uint reg_t1 = 0;
+        uint reg_t2 = 0;
+        uint reg_t3 = 0;
+        uint reg_t4 = 0;
+        uint reg_t5 = 0;
+        uint reg_t6 = 0;
+        uint reg_t7 = 0;
+        uint reg_s0 = 0;
+        uint reg_s1 = 0;
+        uint reg_s2 = 0;
+        uint reg_s3 = 0;
+        uint reg_s4 = 0;
+        uint reg_s5 = 0;
+        uint reg_s6 = 1; // as requested
+        uint reg_s7 = 0;
+        uint reg_t8 = 0;
+        uint reg_t9 = 0;
+        uint reg_k0 = 0;
+        uint reg_k1 = 0;
+        uint reg_gp = 0;
+        uint reg_sp = 0;
+        uint reg_fp = 0;
+        uint reg_ra = 0;
+
+        uint GetRegVal(int idx)
         {
-            slusStart = int.Parse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            return idx switch
+            {
+                0 => reg_zero,
+                1 => reg_at,
+                2 => reg_v0,
+                3 => reg_v1,
+                4 => reg_a0,
+                5 => reg_a1,
+                6 => reg_a2,
+                7 => reg_a3,
+                8 => reg_t0,
+                9 => reg_t1,
+                10 => reg_t2,
+                11 => reg_t3,
+                12 => reg_t4,
+                13 => reg_t5,
+                14 => reg_t6,
+                15 => reg_t7,
+                16 => reg_s0,
+                17 => reg_s1,
+                18 => reg_s2,
+                19 => reg_s3,
+                20 => reg_s4,
+                21 => reg_s5,
+                22 => reg_s6,
+                23 => reg_s7,
+                24 => reg_t8,
+                25 => reg_t9,
+                26 => reg_k0,
+                27 => reg_k1,
+                28 => reg_gp,
+                29 => reg_sp,
+                30 => reg_fp,
+                31 => reg_ra,
+                _ => 0u,
+            };
         }
-        catch (Exception ex)
+
+        void SetRegVal(int idx, uint val)
         {
-            throw new FormatException($"SLUS offset inválido: {slusStartHex}", ex);
+            switch (idx)
+            {
+                case 0: reg_zero = 0; break;
+                case 1: reg_at = val; break;
+                case 2: reg_v0 = val; break;
+                case 3: reg_v1 = val; break;
+                case 4: reg_a0 = val; break;
+                case 5: reg_a1 = val; break;
+                case 6: reg_a2 = val; break;
+                case 7: reg_a3 = val; break;
+                case 8: reg_t0 = val; break;
+                case 9: reg_t1 = val; break;
+                case 10: reg_t2 = val; break;
+                case 11: reg_t3 = val; break;
+                case 12: reg_t4 = val; break;
+                case 13: reg_t5 = val; break;
+                case 14: reg_t6 = val; break;
+                case 15: reg_t7 = val; break;
+                case 16: reg_s0 = val; break;
+                case 17: reg_s1 = val; break;
+                case 18: reg_s2 = val; break;
+                case 19: reg_s3 = val; break;
+                case 20: reg_s4 = val; break;
+                case 21: reg_s5 = val; break;
+                case 22: reg_s6 = val; break;
+                case 23: reg_s7 = val; break;
+                case 24: reg_t8 = val; break;
+                case 25: reg_t9 = val; break;
+                case 26: reg_k0 = val; break;
+                case 27: reg_k1 = val; break;
+                case 28: reg_gp = val; break;
+                case 29: reg_sp = val; break;
+                case 30: reg_fp = val; break;
+                case 31: reg_ra = val; break;
+            }
         }
+
+        // flatten input into instruction lines
+        var instrLines = hexLines
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .SelectMany(x => x.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                              .Select(l => l.Trim())
+                              .Where(l => !string.IsNullOrWhiteSpace(l)))
+            .ToList();
 
         var outList = new List<string>();
         int currentSlus = slusStart;
+        uint? pendingJump = null; // scheduled target SLUS to apply after delay slot
         const uint ramBase = 0x8000F800u;
 
-        foreach (var raw in hexLines)
+        for (int i = 0; i < instrLines.Count; i++)
         {
-            if (string.IsNullOrWhiteSpace(raw)) continue;
-            var subLines = raw.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                              .Select(l => l.Trim())
-                              .Where(l => !string.IsNullOrWhiteSpace(l));
-            foreach (var line in subLines)
+            string line = instrLines[i];
+            try
             {
-                try
-                {
-                    uint word = ParseHexWord(line, littleEndian);
-                    string asm = DecodeWord(word);
-                    uint ramOffset = (uint)currentSlus + ramBase;
-                    // format SLUS as 6 hex digits and RAM as 8 hex digits, uppercase
-                    string slusStr = currentSlus.ToString("X6");
-                    string ramStr = ramOffset.ToString("X8");
+                uint word = ParseHexWord(line, littleEndian);
+                string asm = DecodeWord(word);
+                uint ramOffset = (uint)currentSlus + ramBase;
+                string slusStr = currentSlus.ToString("X6");
+                string ramStr = ramOffset.ToString("X8");
 
-                    // If this is a branch (beq or beqz represented as beq with $zero), compute and append target SLUS and RAM
-                    string branchSuffix = string.Empty;
-                    // detect beq (including beq ...,$zero,... which is beqz semantic)
-                    if (asm.StartsWith("beq ", StringComparison.OrdinalIgnoreCase))
+                string branchSuffix = string.Empty;
+                uint? newPendingJump = null;
+
+                uint opcodeLocal = (word >> 26) & 0x3Fu;
+                int rsIdx = (int)((word >> 21) & 0x1Fu);
+                int rtIdx = (int)((word >> 16) & 0x1Fu);
+                int rdIdx = (int)((word >> 11) & 0x1Fu);
+                int shamt = (int)((word >> 6) & 0x1Fu);
+                uint funct = word & 0x3Fu;
+                int immSigned = (short)(word & 0xFFFF);
+                uint uimm = word & 0xFFFFu;
+                uint addr26 = word & 0x03FFFFFFu;
+
+                // simulate writes for common instructions so branches see updated values
+                if (opcodeLocal == 0x00)
+                {
+                    switch (funct)
                     {
-                        // immediate is lower 16 bits, signed, indicates number of instructions to jump relative to next instruction
-                        int imm = (short)(word & 0xFFFF);
-                        // current instruction RAM address
-                        uint ramCurr = ramOffset;
-                        uint ramNext = ramCurr + 4u;
+                        case 0x20: // add
+                        case 0x21: // addu
+                            SetRegVal(rdIdx, GetRegVal(rsIdx) + GetRegVal(rtIdx));
+                            break;
+                        case 0x22: // sub
+                        case 0x23: // subu
+                            SetRegVal(rdIdx, GetRegVal(rsIdx) - GetRegVal(rtIdx));
+                            break;
+                        case 0x00: // sll
+                            SetRegVal(rdIdx, GetRegVal(rtIdx) << shamt);
+                            break;
+                        case 0x02: // srl
+                            SetRegVal(rdIdx, GetRegVal(rtIdx) >> shamt);
+                            break;
+                        case 0x09: // jalr rd, rs
+                            // write return addr (SLUS) to rd
+                            SetRegVal(rdIdx, (uint)((ramOffset + 8u) - ramBase));
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (opcodeLocal)
+                    {
+                        case 0x08: // addi
+                        case 0x09: // addiu
+                            SetRegVal(rtIdx, (uint)((int)GetRegVal(rsIdx) + immSigned));
+                            break;
+                        case 0x0F: // lui
+                            SetRegVal(rtIdx, (uimm << 16));
+                            break;
+                        case 0x0D: // ori
+                            SetRegVal(rtIdx, GetRegVal(rsIdx) | uimm);
+                            break;
+                        case 0x0C: // andi
+                            SetRegVal(rtIdx, GetRegVal(rsIdx) & uimm);
+                            break;
+                    }
+                }
+
+                // Branch evaluation: beq / bne
+                if (opcodeLocal == 0x04 || opcodeLocal == 0x05)
+                {
+                    uint rsVal = GetRegVal(rsIdx);
+                    uint rtVal = GetRegVal(rtIdx);
+                    bool taken = opcodeLocal == 0x04 ? rsVal == rtVal : rsVal != rtVal;
+
+                    uint ramNext = (uint)currentSlus + ramBase + 4u; // address of instruction after branch (delay slot)
+                    long targetRamSigned = (long)ramNext + (long)immSigned * 4L;
+                    uint targetRam = (uint)targetRamSigned;
+                    uint targetSlus = targetRam - ramBase;
+
+                    branchSuffix = $" ({targetSlus:X6}) [{targetRam:X8}]";
+
+                    if (taken)
+                        newPendingJump = targetSlus;
+                }
+
+                // REGIMM handling (bltz/bgez etc.) - treat common ones
+                if (opcodeLocal == 0x01)
+                {
+                    int rt = (int)rtIdx;
+                    int imm = immSigned;
+                    bool taken = false;
+                    uint rsVal = GetRegVal(rsIdx);
+                    if (rt == 0x00) // bltz
+                        taken = ((int)rsVal) < 0;
+                    else if (rt == 0x01) // bgez
+                        taken = ((int)rsVal) >= 0;
+                    else if (rt == 0x10) // bltzal
+                        taken = ((int)rsVal) < 0;
+                    else if (rt == 0x11) // bgezal
+                        taken = ((int)rsVal) >= 0;
+
+                    if (taken)
+                    {
+                        uint ramNext = (uint)currentSlus + ramBase + 4u;
                         long targetRamSigned = (long)ramNext + (long)imm * 4L;
                         uint targetRam = (uint)targetRamSigned;
                         uint targetSlus = targetRam - ramBase;
                         branchSuffix = $" ({targetSlus:X6}) [{targetRam:X8}]";
+                        newPendingJump = targetSlus;
                     }
+                }
 
-                    outList.Add($"{slusStr}; {ramStr}; {asm}{branchSuffix}");
-                }
-                catch (Exception ex)
+                // detect unconditional jumps j/jal
+                if (opcodeLocal == 0x02 || opcodeLocal == 0x03)
                 {
-                    outList.Add($".error \"{ex.Message} (line: {line})\"");
+                    uint ramAddr = ((addr26 << 2) | 0x80000000u);
+                    uint targetSlus = ramAddr - ramBase;
+                    branchSuffix = branchSuffix.Length > 0 ? branchSuffix : $" [{ramAddr:X8}]";
+                    newPendingJump = targetSlus;
+                    if (opcodeLocal == 0x03)
+                    {
+                        // write return address to $ra (SLUS)
+                        SetRegVal(31, (uint)((ramOffset + 8u) - ramBase));
+                    }
                 }
+
+                // add output entry
+                outList.Add($"{line}; {slusStr}; {ramStr}; {asm}{branchSuffix}");
+
+                // Advance to next instruction (delay slot will be executed next)
                 currentSlus += 4;
+
+                // If there was a pending jump from the previous instruction, apply it now (after executing its delay slot)
+                if (pendingJump.HasValue)
+                {
+                    currentSlus = (int)pendingJump.Value;
+                    pendingJump = null;
+                }
+
+                // schedule jump from this instruction to be applied after the next instruction
+                if (newPendingJump.HasValue)
+                    pendingJump = newPendingJump;
             }
+            catch (Exception ex)
+            {
+                outList.Add($".error \"{ex.Message} (line: {line})\"");
+            }
+        }
+
+        // print register values after routine
+        Console.WriteLine("\nRegister state after tracing:");
+        var regPairs = new (string, uint)[]
+        {
+            ("$zero", reg_zero), ("$at", reg_at), ("$v0", reg_v0), ("$v1", reg_v1),
+            ("$a0", reg_a0), ("$a1", reg_a1), ("$a2", reg_a2), ("$a3", reg_a3),
+            ("$t0", reg_t0), ("$t1", reg_t1), ("$t2", reg_t2), ("$t3", reg_t3),
+            ("$t4", reg_t4), ("$t5", reg_t5), ("$t6", reg_t6), ("$t7", reg_t7),
+            ("$s0", reg_s0), ("$s1", reg_s1), ("$s2", reg_s2), ("$s3", reg_s3),
+            ("$s4", reg_s4), ("$s5", reg_s5), ("$s6", reg_s6), ("$s7", reg_s7),
+            ("$t8", reg_t8), ("$t9", reg_t9), ("$k0", reg_k0), ("$k1", reg_k1),
+            ("$gp", reg_gp), ("$sp", reg_sp), ("$fp", reg_fp), ("$ra", reg_ra)
+        };
+        foreach (var (name, val) in regPairs)
+        {
+            Console.WriteLine($"{name} = 0x{val:X8} ({val})");
         }
 
         return outList;

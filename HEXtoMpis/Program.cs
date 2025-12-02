@@ -24,32 +24,63 @@ internal static class Program
     // Mutable register values representing execution-time state; update these during execution as needed
     private static readonly Dictionary<string, uint> RegValues = new()
     {
-        {"$zero", 0u}, {"$at", 0u}, {"$v0", 0u}, {"$v1", 0u},
-        {"$a0", 0u}, {"$a1", 0u}, {"$a2", 0u}, {"$a3", 0u},
-        {"$t0", 0u}, {"$t1", 0u}, {"$t2", 0u}, {"$t3", 0u},
-        {"$t4", 0u}, {"$t5", 0u}, {"$t6", 0u}, {"$t7", 0u},
-        {"$s0", 0u}, {"$s1", 0u}, {"$s2", 0u}, {"$s3", 0u},
-        {"$s4", 0u}, {"$s5", 0u}, {"$s6", 0u}, {"$s7", 0u},
-        {"$t8", 0u}, {"$t9", 0u}, {"$k0", 0u}, {"$k1", 0u},
-        {"$gp", 0u}, {"$sp", 0u}, {"$fp", 0u}, {"$ra", 0u},
+        {"$zero", 0x00000000u}, {"$at", 0x00000000u}, {"$v0", 0x00000000u}, {"$v1", 0x00000000u},
+        {"$a0",   0x00000000u}, {"$a1", 0x00000000u}, {"$a2", 0x00000000u}, {"$a3", 0x00000000u},
+        {"$t0",   0x00000000u}, {"$t1", 0x00000000u}, {"$t2", 0x00000000u}, {"$t3", 0x00000000u},
+        {"$t4",   0x00000000u}, {"$t5", 0x00000000u}, {"$t6", 0x00000000u}, {"$t7", 0x00000000u},
+        {"$s0",   0x00000000u}, {"$s1", 0x00000000u}, {"$s2", 0x00000000u}, {"$s3", 0x00000000u},
+        {"$s4",   0x00000000u}, {"$s5", 0x00000000u}, {"$s6", 0x00000000u}, {"$s7", 0x00000000u},
+        {"$t8",   0x00000000u}, {"$t9", 0x00000000u}, {"$k0", 0x00000000u}, {"$k1", 0x00000000u},
+        {"$gp",   0x00000000u}, {"$sp", 0x00000000u}, {"$fp", 0x00000000u}, {"$ra", 0x00000000u},
     };
 
     private static void Main()
     {
         var hexLines = new[]
         {
-            @"88 7E 00 08
+            @"00 00 08 25
+01 00 08 25
+02 00 08 25
+03 00 08 25
+04 00 08 25
+05 00 08 25
+06 00 08 25
+07 00 08 25
+08 00 08 25
+09 00 08 25
+0A 00 08 25
+0B 00 08 25
+0C 00 08 25
+0D 00 08 25
+0E 00 08 25
+0F 00 08 25
+10 00 08 25
+11 00 08 25
+12 00 08 25
+13 00 08 25
+14 00 08 25
+15 00 08 25
+16 00 08 25
+17 00 08 25
+18 00 08 25
+19 00 08 25
+03 00 09 11
+00 00 00 00
+21 3E 00 08
 00 00 00 00
 00 00 00 00
-FD FF 20 11
-00 00 00 00"
+01 00 09 24
+FA FF 00 11
+00 00 00 00
+00 00 00 00
+"
         };
 
         // exemplo usando slus offset
-        var slusStart = "10210";
+        var slusStart = "00000000";
         // routine boundaries (SLUS offsets) - set to desired values
-        var routineStart = "10210"; // start SLUS
-        var routineFinish = "10000004"; // finish SLUS
+        var routineStart = "68"; // start SLUS
+        var routineFinish = "88"; // finish SLUS
         var asmWithOffsets = ConvertHexToMipsWithOffsets(slusStart, hexLines, littleEndian: true, routineStartHex: routineStart, routineFinishHex: routineFinish);
 
         // create timestamped output filename so each run produces a new file
@@ -61,6 +92,15 @@ FD FF 20 11
         Directory.CreateDirectory(outputsDir);
 
         var outPath = Path.Combine(outputsDir, $"output_{timestamp}.csv");
+
+        // Print final register values before routine output
+        Console.WriteLine("Final register values (after execution):");
+        foreach (var kv in RegValues.OrderBy(k => RegHex[k.Key]))
+        {
+            var pad = kv.Key == "$zero" ? string.Empty : "  ";
+            Console.WriteLine($"{pad}{kv.Key} = 0x{kv.Value:X8}");
+        }
+        Console.WriteLine();
 
         // temporary: print CSV header to file and console (first column = original HEX), keep identical remaining columns
         using (var sw = new StreamWriter(outPath, false, System.Text.Encoding.UTF8))
@@ -446,18 +486,35 @@ FD FF 20 11
             string asm = DecodeWord(word, ram);
             result.Add($"{originalHex}; {slus:X6}; {ram:X8}; {asm}");
 
-            // Branch flow control: if beq/bne is taken, execute delay slot (next word), then jump to target
+            // Branch/Jump flow control: if beq/bne is taken or j/jal, execute delay slot, then jump to target
             uint opcode = (word >> 26) & 0x3Fu;
-            if (opcode == 0x04 || opcode == 0x05)
+            if (opcode == 0x04 || opcode == 0x05 || opcode == 0x02 || opcode == 0x03)
             {
-                int rs = (int)((word >> 21) & 0x1Fu);
-                int rt = (int)((word >> 16) & 0x1Fu);
-                int imm = (short)(word & 0xFFFF);
-                string rsn = RegName(rs);
-                string rtn = RegName(rt);
-                bool taken = opcode == 0x04 ? (RegValues[rsn] == RegValues[rtn]) : (RegValues[rsn] != RegValues[rtn]);
+                bool shouldJump = false;
+                uint targetRam = 0u;
 
-                if (taken)
+                if (opcode == 0x04 || opcode == 0x05)
+                {
+                    int rs = (int)((word >> 21) & 0x1Fu);
+                    int rt = (int)((word >> 16) & 0x1Fu);
+                    int imm = (short)(word & 0xFFFF);
+                    string rsn = RegName(rs);
+                    string rtn = RegName(rt);
+                    bool taken = opcode == 0x04 ? (RegValues[rsn] == RegValues[rtn]) : (RegValues[rsn] != RegValues[rtn]);
+                    shouldJump = taken;
+                    if (taken)
+                    {
+                        targetRam = unchecked(ram + 4u + (uint)(imm * 4));
+                    }
+                }
+                else // j / jal
+                {
+                    uint addr26 = word & 0x03FFFFFFu;
+                    targetRam = ((addr26 << 2) | 0x80000000u);
+                    shouldJump = true; // unconditional
+                }
+
+                if (shouldJump)
                 {
                     // Execute delay slot (next sequential instruction) if it exists
                     if (i + 1 < takeCount)
@@ -479,18 +536,14 @@ FD FF 20 11
                         result.Add($"{delayHex}; {delaySlus:X6}; {delayRam:X8}; {delayAsm}");
                     }
 
-                    // Compute branch target RAM and map to index within flatLines
-                    uint targetRam = unchecked(ram + 4u + (uint)(imm * 4));
+                    // Map target RAM to SLUS and index within flatLines
                     uint targetSlus = targetRam - 0x8000F800u;
                     int targetIndex = (int)((targetSlus - baseAddr) / 4);
 
-                    // Move execution to target if within slice; else stop
                     if (targetIndex >= 0 && targetIndex < flatLines.Count)
                     {
-                        // Rebase i so next iteration points to target
-                        int newGlobalIndex = targetIndex;
-                        // Convert to local slice index relative to startWordIndex
-                        i = newGlobalIndex - startWordIndex;
+                        // Jump: set i to target index relative to slice
+                        i = targetIndex - startWordIndex;
                         continue;
                     }
                     else

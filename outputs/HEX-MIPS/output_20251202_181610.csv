@@ -1,0 +1,7 @@
+﻿HEX,SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM
+j 0x801D9100 (1C9900),,,"",,
+nop,,,"",,
+addu $s0, $s0, $s1,,,"",,
+beq $t1, $zero, 1,,,"",,
+addiu $s0, $s0, 0 [0x0000],,,"",,
+addiu $s0, $s0, 0 [0x0000],,,"",,

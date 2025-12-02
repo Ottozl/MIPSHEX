@@ -8,30 +8,49 @@ using System.IO;
 // Small utility to convert HEX words to MIPS assembly (supports many common R/I/J instructions)
 internal static class Program
 {
+    // Hard-coded register hex identifiers for comparison at execution time
+    private static readonly Dictionary<string, uint> RegHex = new()
+    {
+        {"$zero", 0x00}, {"$at", 0x01}, {"$v0", 0x02}, {"$v1", 0x03},
+        {"$a0", 0x04}, {"$a1", 0x05}, {"$a2", 0x06}, {"$a3", 0x07},
+        {"$t0", 0x08}, {"$t1", 0x09}, {"$t2", 0x0A}, {"$t3", 0x0B},
+        {"$t4", 0x0C}, {"$t5", 0x0D}, {"$t6", 0x0E}, {"$t7", 0x0F},
+        {"$s0", 0x10}, {"$s1", 0x11}, {"$s2", 0x12}, {"$s3", 0x13},
+        {"$s4", 0x14}, {"$s5", 0x15}, {"$s6", 0x16}, {"$s7", 0x17},
+        {"$t8", 0x18}, {"$t9", 0x19}, {"$k0", 0x1A}, {"$k1", 0x1B},
+        {"$gp", 0x1C}, {"$sp", 0x1D}, {"$fp", 0x1E}, {"$ra", 0x1F},
+    };
+
+    // Mutable register values representing execution-time state; update these during execution as needed
+    private static readonly Dictionary<string, uint> RegValues = new()
+    {
+        {"$zero", 0u}, {"$at", 0u}, {"$v0", 0u}, {"$v1", 0u},
+        {"$a0", 0u}, {"$a1", 0u}, {"$a2", 0u}, {"$a3", 0u},
+        {"$t0", 0u}, {"$t1", 0u}, {"$t2", 0u}, {"$t3", 0u},
+        {"$t4", 0u}, {"$t5", 0u}, {"$t6", 0u}, {"$t7", 0u},
+        {"$s0", 0u}, {"$s1", 0u}, {"$s2", 0u}, {"$s3", 0u},
+        {"$s4", 0u}, {"$s5", 0u}, {"$s6", 0u}, {"$s7", 0u},
+        {"$t8", 0u}, {"$t9", 0u}, {"$k0", 0u}, {"$k1", 0u},
+        {"$gp", 0u}, {"$sp", 0u}, {"$fp", 0u}, {"$ra", 0u},
+    };
+
     private static void Main()
     {
         var hexLines = new[]
         {
-            @"01 00 17 24
-09 00 D7 12
-02 00 17 24
-00 00 D7 12
-03 00 17 24
-00 00 D7 12
-04 00 17 24
-00 00 D7 12
+            @"88 7E 00 08
 00 00 00 00
-5F 66 07 08
 00 00 00 00
-1A 80 0C 3C
-1A 80 0D 3C
-CD 02 87 93
-             "
+FD FF 20 11
+00 00 00 00"
         };
 
         // exemplo usando slus offset
-        var slusStart = "1CA1B8";
-        var asmWithOffsets = ConvertHexToMipsWithOffsets(slusStart, hexLines, littleEndian: true);
+        var slusStart = "10210";
+        // routine boundaries (SLUS offsets) - set to desired values
+        var routineStart = "10210"; // start SLUS
+        var routineFinish = "10000004"; // finish SLUS
+        var asmWithOffsets = ConvertHexToMipsWithOffsets(slusStart, hexLines, littleEndian: true, routineStartHex: routineStart, routineFinishHex: routineFinish);
 
         // create timestamped output filename so each run produces a new file
         var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
@@ -76,7 +95,7 @@ CD 02 87 93
                 asmField = "\"" + asmField.Replace("\"", "\"\"") + "\"";
 
                 sw.WriteLine($"{hex},{slus},{ram},{asmField},{branchSlus},{branchRam}");
-                Console.WriteLine($"{hex},{slus},{ram},{asmField},{branchSlus},{branchRam}");
+                Console.WriteLine($"{hex} | {slus} | {ram} | {asmField} | {branchSlus} | {branchRam}");
             }
         }
 
@@ -138,317 +157,6 @@ CD 02 87 93
         return outList;
     }
 
-    // New: Convert hex list to MIPS assembly while also printing SLUS and RAM offsets per line.
-    // slusStartHex accepts strings like "1CA140" or "0x1CA140". ramOffset = slus + 0x8000F800.
-    public static List<string> ConvertHexToMipsWithOffsets(string slusStartHex, IEnumerable<string> hexLines, bool littleEndian = true)
-    {
-        if (hexLines == null) throw new ArgumentNullException(nameof(hexLines));
-        if (string.IsNullOrWhiteSpace(slusStartHex)) throw new ArgumentNullException(nameof(slusStartHex));
-
-        // normalize and parse slus start
-        var s = slusStartHex.Trim();
-        if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) s = s.Substring(2);
-        if (!int.TryParse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int slusStart))
-            throw new FormatException($"SLUS offset inválido: {slusStartHex}");
-
-        // initial register state (hardcoded values)
-        uint reg_zero = 0;
-        uint reg_at = 0;
-        uint reg_v0 = 0;
-        uint reg_v1 = 0;
-        uint reg_a0 = 0;
-        uint reg_a1 = 0;
-        uint reg_a2 = 0;
-        uint reg_a3 = 0;
-        uint reg_t0 = 0;
-        uint reg_t1 = 0;
-        uint reg_t2 = 0;
-        uint reg_t3 = 0;
-        uint reg_t4 = 0;
-        uint reg_t5 = 0;
-        uint reg_t6 = 0;
-        uint reg_t7 = 0;
-        uint reg_s0 = 0;
-        uint reg_s1 = 0;
-        uint reg_s2 = 0;
-        uint reg_s3 = 0;
-        uint reg_s4 = 0;
-        uint reg_s5 = 0;
-        uint reg_s6 = 1; // as requested
-        uint reg_s7 = 0;
-        uint reg_t8 = 0;
-        uint reg_t9 = 0;
-        uint reg_k0 = 0;
-        uint reg_k1 = 0;
-        uint reg_gp = 0;
-        uint reg_sp = 0;
-        uint reg_fp = 0;
-        uint reg_ra = 0;
-
-        uint GetRegVal(int idx)
-        {
-            return idx switch
-            {
-                0 => reg_zero,
-                1 => reg_at,
-                2 => reg_v0,
-                3 => reg_v1,
-                4 => reg_a0,
-                5 => reg_a1,
-                6 => reg_a2,
-                7 => reg_a3,
-                8 => reg_t0,
-                9 => reg_t1,
-                10 => reg_t2,
-                11 => reg_t3,
-                12 => reg_t4,
-                13 => reg_t5,
-                14 => reg_t6,
-                15 => reg_t7,
-                16 => reg_s0,
-                17 => reg_s1,
-                18 => reg_s2,
-                19 => reg_s3,
-                20 => reg_s4,
-                21 => reg_s5,
-                22 => reg_s6,
-                23 => reg_s7,
-                24 => reg_t8,
-                25 => reg_t9,
-                26 => reg_k0,
-                27 => reg_k1,
-                28 => reg_gp,
-                29 => reg_sp,
-                30 => reg_fp,
-                31 => reg_ra,
-                _ => 0u,
-            };
-        }
-
-        void SetRegVal(int idx, uint val)
-        {
-            switch (idx)
-            {
-                case 0: reg_zero = 0; break;
-                case 1: reg_at = val; break;
-                case 2: reg_v0 = val; break;
-                case 3: reg_v1 = val; break;
-                case 4: reg_a0 = val; break;
-                case 5: reg_a1 = val; break;
-                case 6: reg_a2 = val; break;
-                case 7: reg_a3 = val; break;
-                case 8: reg_t0 = val; break;
-                case 9: reg_t1 = val; break;
-                case 10: reg_t2 = val; break;
-                case 11: reg_t3 = val; break;
-                case 12: reg_t4 = val; break;
-                case 13: reg_t5 = val; break;
-                case 14: reg_t6 = val; break;
-                case 15: reg_t7 = val; break;
-                case 16: reg_s0 = val; break;
-                case 17: reg_s1 = val; break;
-                case 18: reg_s2 = val; break;
-                case 19: reg_s3 = val; break;
-                case 20: reg_s4 = val; break;
-                case 21: reg_s5 = val; break;
-                case 22: reg_s6 = val; break;
-                case 23: reg_s7 = val; break;
-                case 24: reg_t8 = val; break;
-                case 25: reg_t9 = val; break;
-                case 26: reg_k0 = val; break;
-                case 27: reg_k1 = val; break;
-                case 28: reg_gp = val; break;
-                case 29: reg_sp = val; break;
-                case 30: reg_fp = val; break;
-                case 31: reg_ra = val; break;
-            }
-        }
-
-        // flatten input into instruction lines
-        var instrLines = hexLines
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .SelectMany(x => x.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                              .Select(l => l.Trim())
-                              .Where(l => !string.IsNullOrWhiteSpace(l)))
-            .ToList();
-
-        var outList = new List<string>();
-        int currentSlus = slusStart;
-        uint? pendingJump = null; // scheduled target SLUS to apply after delay slot
-        const uint ramBase = 0x8000F800u;
-
-        for (int i = 0; i < instrLines.Count; i++)
-        {
-            string line = instrLines[i];
-            try
-            {
-                uint word = ParseHexWord(line, littleEndian);
-                string asm = DecodeWord(word);
-                uint ramOffset = (uint)currentSlus + ramBase;
-                string slusStr = currentSlus.ToString("X6");
-                string ramStr = ramOffset.ToString("X8");
-
-                string branchSuffix = string.Empty;
-                uint? newPendingJump = null;
-
-                uint opcodeLocal = (word >> 26) & 0x3Fu;
-                int rsIdx = (int)((word >> 21) & 0x1Fu);
-                int rtIdx = (int)((word >> 16) & 0x1Fu);
-                int rdIdx = (int)((word >> 11) & 0x1Fu);
-                int shamt = (int)((word >> 6) & 0x1Fu);
-                uint funct = word & 0x3Fu;
-                int immSigned = (short)(word & 0xFFFF);
-                uint uimm = word & 0xFFFFu;
-                uint addr26 = word & 0x03FFFFFFu;
-
-                // simulate writes for common instructions so branches see updated values
-                if (opcodeLocal == 0x00)
-                {
-                    switch (funct)
-                    {
-                        case 0x20: // add
-                        case 0x21: // addu
-                            SetRegVal(rdIdx, GetRegVal(rsIdx) + GetRegVal(rtIdx));
-                            break;
-                        case 0x22: // sub
-                        case 0x23: // subu
-                            SetRegVal(rdIdx, GetRegVal(rsIdx) - GetRegVal(rtIdx));
-                            break;
-                        case 0x00: // sll
-                            SetRegVal(rdIdx, GetRegVal(rtIdx) << shamt);
-                            break;
-                        case 0x02: // srl
-                            SetRegVal(rdIdx, GetRegVal(rtIdx) >> shamt);
-                            break;
-                        case 0x09: // jalr rd, rs
-                            // write return addr (SLUS) to rd
-                            SetRegVal(rdIdx, (uint)((ramOffset + 8u) - ramBase));
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (opcodeLocal)
-                    {
-                        case 0x08: // addi
-                        case 0x09: // addiu
-                            SetRegVal(rtIdx, (uint)((int)GetRegVal(rsIdx) + immSigned));
-                            break;
-                        case 0x0F: // lui
-                            SetRegVal(rtIdx, (uimm << 16));
-                            break;
-                        case 0x0D: // ori
-                            SetRegVal(rtIdx, GetRegVal(rsIdx) | uimm);
-                            break;
-                        case 0x0C: // andi
-                            SetRegVal(rtIdx, GetRegVal(rsIdx) & uimm);
-                            break;
-                    }
-                }
-
-                // Branch evaluation: beq / bne
-                if (opcodeLocal == 0x04 || opcodeLocal == 0x05)
-                {
-                    uint rsVal = GetRegVal(rsIdx);
-                    uint rtVal = GetRegVal(rtIdx);
-                    bool taken = opcodeLocal == 0x04 ? rsVal == rtVal : rsVal != rtVal;
-
-                    uint ramNext = (uint)currentSlus + ramBase + 4u; // address of instruction after branch (delay slot)
-                    long targetRamSigned = (long)ramNext + (long)immSigned * 4L;
-                    uint targetRam = (uint)targetRamSigned;
-                    uint targetSlus = targetRam - ramBase;
-
-                    branchSuffix = $" ({targetSlus:X6}) [{targetRam:X8}]";
-
-                    if (taken)
-                        newPendingJump = targetSlus;
-                }
-
-                // REGIMM handling (bltz/bgez etc.) - treat common ones
-                if (opcodeLocal == 0x01)
-                {
-                    int rt = (int)rtIdx;
-                    int imm = immSigned;
-                    bool taken = false;
-                    uint rsVal = GetRegVal(rsIdx);
-                    if (rt == 0x00) // bltz
-                        taken = ((int)rsVal) < 0;
-                    else if (rt == 0x01) // bgez
-                        taken = ((int)rsVal) >= 0;
-                    else if (rt == 0x10) // bltzal
-                        taken = ((int)rsVal) < 0;
-                    else if (rt == 0x11) // bgezal
-                        taken = ((int)rsVal) >= 0;
-
-                    if (taken)
-                    {
-                        uint ramNext = (uint)currentSlus + ramBase + 4u;
-                        long targetRamSigned = (long)ramNext + (long)imm * 4L;
-                        uint targetRam = (uint)targetRamSigned;
-                        uint targetSlus = targetRam - ramBase;
-                        branchSuffix = $" ({targetSlus:X6}) [{targetRam:X8}]";
-                        newPendingJump = targetSlus;
-                    }
-                }
-
-                // detect unconditional jumps j/jal
-                if (opcodeLocal == 0x02 || opcodeLocal == 0x03)
-                {
-                    uint ramAddr = ((addr26 << 2) | 0x80000000u);
-                    uint targetSlus = ramAddr - ramBase;
-                    branchSuffix = branchSuffix.Length > 0 ? branchSuffix : $" [{ramAddr:X8}]";
-                    newPendingJump = targetSlus;
-                    if (opcodeLocal == 0x03)
-                    {
-                        // write return address to $ra (SLUS)
-                        SetRegVal(31, (uint)((ramOffset + 8u) - ramBase));
-                    }
-                }
-
-                // add output entry
-                outList.Add($"{line}; {slusStr}; {ramStr}; {asm}{branchSuffix}");
-
-                // Advance to next instruction (delay slot will be executed next)
-                currentSlus += 4;
-
-                // If there was a pending jump from the previous instruction, apply it now (after executing its delay slot)
-                if (pendingJump.HasValue)
-                {
-                    currentSlus = (int)pendingJump.Value;
-                    pendingJump = null;
-                }
-
-                // schedule jump from this instruction to be applied after the next instruction
-                if (newPendingJump.HasValue)
-                    pendingJump = newPendingJump;
-            }
-            catch (Exception ex)
-            {
-                outList.Add($".error \"{ex.Message} (line: {line})\"");
-            }
-        }
-
-        // print register values after routine
-        Console.WriteLine("\nRegister state after tracing:");
-        var regPairs = new (string, uint)[]
-        {
-            ("$zero", reg_zero), ("$at", reg_at), ("$v0", reg_v0), ("$v1", reg_v1),
-            ("$a0", reg_a0), ("$a1", reg_a1), ("$a2", reg_a2), ("$a3", reg_a3),
-            ("$t0", reg_t0), ("$t1", reg_t1), ("$t2", reg_t2), ("$t3", reg_t3),
-            ("$t4", reg_t4), ("$t5", reg_t5), ("$t6", reg_t6), ("$t7", reg_t7),
-            ("$s0", reg_s0), ("$s1", reg_s1), ("$s2", reg_s2), ("$s3", reg_s3),
-            ("$s4", reg_s4), ("$s5", reg_s5), ("$s6", reg_s6), ("$s7", reg_s7),
-            ("$t8", reg_t8), ("$t9", reg_t9), ("$k0", reg_k0), ("$k1", reg_k1),
-            ("$gp", reg_gp), ("$sp", reg_sp), ("$fp", reg_fp), ("$ra", reg_ra)
-        };
-        foreach (var (name, val) in regPairs)
-        {
-            Console.WriteLine($"{name} = 0x{val:X8} ({val})");
-        }
-
-        return outList;
-    }
-
     // Parse a single hex line into a uint word. Supports three formats.
     private static uint ParseHexWord(string s, bool littleEndian)
     {
@@ -495,7 +203,7 @@ CD 02 87 93
         }
     }
 
-    // Decode 32-bit instruction word into MIPS assembly (subset)
+    // Decode 32-bit instruction word into MIPS assembly (subset) without PC context
     private static string DecodeWord(uint w)
     {
         if (w == 0u) return "nop";
@@ -543,13 +251,13 @@ CD 02 87 93
                 {
                     uint ramAddr = ((addr26 << 2) | 0x80000000u);
                     uint slus = ramAddr - 0x8000F800u;
-                    return $"j 0x{ramAddr:X8} ({slus:X6})";
+                    return $"j 0x{ramAddr:X8} ({slus:X6}) [0x{ramAddr:X8}]";
                 }
             case 0x03: // jal
                 {
                     uint ramAddr = ((addr26 << 2) | 0x80000000u);
                     uint slus = ramAddr - 0x8000F800u;
-                    return $"jal 0x{ramAddr:X8} ({slus:X6})";
+                    return $"jal 0x{ramAddr:X8} ({slus:X6}) [0x{ramAddr:X8}]";
                 }
 
             case 0x04: return $"beq {RegName(rs)}, {RegName(rt)}, {imm}";
@@ -589,6 +297,59 @@ CD 02 87 93
         }
     }
 
+    // Decode with PC (RAM) context to compute branch targets and flag beq/bne
+    private static string DecodeWord(uint w, uint currentRam)
+    {
+        if (w == 0u) return "nop";
+
+        uint opcode = (w >> 26) & 0x3Fu;
+        int rs = (int)((w >> 21) & 0x1Fu);
+        int rt = (int)((w >> 16) & 0x1Fu);
+        int rd = (int)((w >> 11) & 0x1Fu);
+        int shamt = (int)((w >> 6) & 0x1Fu);
+        uint funct = w & 0x3Fu;
+        int imm = (short)(w & 0xFFFF);
+        uint uimm = w & 0xFFFFu;
+        uint addr26 = w & 0x03FFFFFFu;
+
+        switch (opcode)
+        {
+            case 0x02: // j
+            {
+                uint ramAddr = ((addr26 << 2) | 0x80000000u);
+                uint slus = ramAddr - 0x8000F800u;
+                return $"j 0x{ramAddr:X8} ({slus:X6}) [0x{ramAddr:X8}]";
+            }
+            case 0x03: // jal
+            {
+                uint ramAddr = ((addr26 << 2) | 0x80000000u);
+                uint slus = ramAddr - 0x8000F800u;
+                return $"jal 0x{ramAddr:X8} ({slus:X6}) [0x{ramAddr:X8}]";
+            }
+            case 0x04: // beq
+            {
+                string rsn = RegName(rs);
+                string rtn = RegName(rt);
+                bool taken = RegValues[rsn] == RegValues[rtn];
+                uint targetRam = unchecked(currentRam + 4u + (uint)(imm * 4));
+                uint targetSlus = targetRam - 0x8000F800u;
+                return $"{(taken ? "[true]" : "[false]")} beq {rsn}, {rtn}, {imm} ({targetSlus:X6}) [0x{targetRam:X8}]";
+            }
+            case 0x05: // bne
+            {
+                string rsn = RegName(rs);
+                string rtn = RegName(rt);
+                bool taken = RegValues[rsn] != RegValues[rtn];
+                uint targetRam = unchecked(currentRam + 4u + (uint)(imm * 4));
+                uint targetSlus = targetRam - 0x8000F800u;
+                return $"{(taken ? "[true]" : "[false]")} bne {rsn}, {rtn}, {imm} ({targetSlus:X6}) [0x{targetRam:X8}]";
+            }
+            default:
+                // Fallback to non-PC-aware decoding for other opcodes
+                return DecodeWord(w);
+        }
+    }
+
     private static string RegName(int idx)
     {
         // prefer symbolic names
@@ -601,5 +362,149 @@ CD 02 87 93
         };
         if (idx >= 0 && idx < names.Length) return names[idx];
         return "$r" + idx;
+    }
+
+    // New: Convert hex list to MIPS assembly while also printing SLUS and RAM offsets per line.
+    // slusStartHex accepts strings like "1CA140" or "0x1CA140". ramOffset = slus + 0x8000F800.
+    private static List<string> ConvertHexToMipsWithOffsets(
+    string slusStartHex,
+    IEnumerable<string> hexLines,
+    bool littleEndian = true,
+    string? routineStartHex = null,
+    string? routineFinishHex = null)
+    {
+        static uint ParseAddr(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) throw new ArgumentException(nameof(s));
+            s = s.Trim();
+            if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase)) s = s.Substring(2);
+            return uint.Parse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+        }
+
+        var baseAddr = ParseAddr(slusStartHex);
+
+        // Flatten all input into per-instruction lines preserving original text per word
+        var flatLines = new List<string>();
+        foreach (var raw in hexLines ?? throw new ArgumentNullException(nameof(hexLines)))
+        {
+            if (string.IsNullOrWhiteSpace(raw)) continue;
+            var sub = raw.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                         .Select(l => l.Trim())
+                         .Where(l => !string.IsNullOrWhiteSpace(l));
+            flatLines.AddRange(sub);
+        }
+
+        int startWordIndex = 0;
+        if (!string.IsNullOrWhiteSpace(routineStartHex))
+        {
+            var routineAddr = ParseAddr(routineStartHex);
+            if (routineAddr < baseAddr)
+                throw new InvalidOperationException("routineStartHex é menor que a base (slusStartHex)");
+            startWordIndex = checked((int)((routineAddr - baseAddr) / 4));
+        }
+
+        int? endWordIndex = null;
+        if (!string.IsNullOrWhiteSpace(routineFinishHex))
+        {
+            var finishAddr = ParseAddr(routineFinishHex);
+            if (finishAddr < baseAddr)
+                throw new InvalidOperationException("routineFinishHex é menor que a base (slusStartHex)");
+            endWordIndex = checked((int)((finishAddr - baseAddr) / 4));
+        }
+
+        if (startWordIndex < 0 || startWordIndex > flatLines.Count)
+            throw new ArgumentOutOfRangeException(nameof(routineStartHex), "Índice inicial fora do intervalo das linhas HEX.");
+
+        int takeCount = (endWordIndex is int e && e > startWordIndex && e <= flatLines.Count)
+            ? (e - startWordIndex)
+            : (flatLines.Count - startWordIndex);
+
+        var result = new List<string>(takeCount);
+        int i = 0;
+        while (i < takeCount)
+        {
+            int globalIndex = startWordIndex + i;
+            string originalHex = flatLines[globalIndex];
+
+            uint slus = baseAddr + (uint)(globalIndex * 4);
+            uint ram = slus + 0x8000F800u;
+
+            uint word;
+            try
+            {
+                word = ParseHexWord(originalHex, littleEndian);
+            }
+            catch (Exception ex)
+            {
+                string asmErr = $".error \"{ex.Message} (line: {originalHex})\"";
+                result.Add($"{originalHex}; {slus:X6}; {ram:X8}; {asmErr}");
+                i++;
+                continue;
+            }
+
+            // Decode with PC context
+            string asm = DecodeWord(word, ram);
+            result.Add($"{originalHex}; {slus:X6}; {ram:X8}; {asm}");
+
+            // Branch flow control: if beq/bne is taken, execute delay slot (next word), then jump to target
+            uint opcode = (word >> 26) & 0x3Fu;
+            if (opcode == 0x04 || opcode == 0x05)
+            {
+                int rs = (int)((word >> 21) & 0x1Fu);
+                int rt = (int)((word >> 16) & 0x1Fu);
+                int imm = (short)(word & 0xFFFF);
+                string rsn = RegName(rs);
+                string rtn = RegName(rt);
+                bool taken = opcode == 0x04 ? (RegValues[rsn] == RegValues[rtn]) : (RegValues[rsn] != RegValues[rtn]);
+
+                if (taken)
+                {
+                    // Execute delay slot (next sequential instruction) if it exists
+                    if (i + 1 < takeCount)
+                    {
+                        int delayGlobalIndex = startWordIndex + (i + 1);
+                        string delayHex = flatLines[delayGlobalIndex];
+                        uint delaySlus = baseAddr + (uint)(delayGlobalIndex * 4);
+                        uint delayRam = delaySlus + 0x8000F800u;
+                        string delayAsm;
+                        try
+                        {
+                            uint delayWord = ParseHexWord(delayHex, littleEndian);
+                            delayAsm = DecodeWord(delayWord, delayRam);
+                        }
+                        catch (Exception ex)
+                        {
+                            delayAsm = $".error \"{ex.Message} (line: {delayHex})\"";
+                        }
+                        result.Add($"{delayHex}; {delaySlus:X6}; {delayRam:X8}; {delayAsm}");
+                    }
+
+                    // Compute branch target RAM and map to index within flatLines
+                    uint targetRam = unchecked(ram + 4u + (uint)(imm * 4));
+                    uint targetSlus = targetRam - 0x8000F800u;
+                    int targetIndex = (int)((targetSlus - baseAddr) / 4);
+
+                    // Move execution to target if within slice; else stop
+                    if (targetIndex >= 0 && targetIndex < flatLines.Count)
+                    {
+                        // Rebase i so next iteration points to target
+                        int newGlobalIndex = targetIndex;
+                        // Convert to local slice index relative to startWordIndex
+                        i = newGlobalIndex - startWordIndex;
+                        continue;
+                    }
+                    else
+                    {
+                        // Target out of range; stop execution
+                        break;
+                    }
+                }
+            }
+
+            // Normal sequential advance
+            i++;
+        }
+
+        return result;
     }
 }

@@ -1,0 +1,6 @@
+﻿HEX,SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM
+03 00 20 11,010210,8001FA10,"[false] beq $t1, $zero, 3 (010220) [0x8001FA20]",,
+00 00 00 00,010214,8001FA14,"nop",,
+21 80 11 02,010218,8001FA18,"addu $s0, $s0, $s1",,
+01 00 20 11,01021C,8001FA1C,"[false] beq $t1, $zero, 1 (010224) [0x8001FA24]",,
+01 00 10 24,010220,8001FA20,"addiu $s0, $zero, 1 [0x0001]",,

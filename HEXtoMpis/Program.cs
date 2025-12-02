@@ -66,12 +66,19 @@ internal static class Program
 19 00 08 25
 03 00 09 11
 00 00 00 00
-21 3E 00 08
+23 3E 00 08
 00 00 00 00
 00 00 00 00
 01 00 09 24
 FA FF 00 11
 00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+21 3E 00 08
 00 00 00 00
 "
         };
@@ -107,7 +114,7 @@ FA FF 00 11
         {
             sw.WriteLine("HEX,SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM");
 
-            Console.WriteLine("HEX,SLUS,RAM,ASM,BranchTargetSLUS,BranchTargetRAM");
+            Console.WriteLine("    HEX     |   SLUS   |    RAM   |   ASM  |BranchTargetSLUS|BranchTargetRAM");
 
             foreach (var a in asmWithOffsets)
             {
@@ -291,13 +298,13 @@ FA FF 00 11
                 {
                     uint ramAddr = ((addr26 << 2) | 0x80000000u);
                     uint slus = ramAddr - 0x8000F800u;
-                    return $"j 0x{ramAddr:X8} ({slus:X6}) [0x{ramAddr:X8}]";
+                    return $"j 0x{ramAddr:X8} ({slus:X8}) [0x{ramAddr:X8}]";
                 }
             case 0x03: // jal
                 {
                     uint ramAddr = ((addr26 << 2) | 0x80000000u);
                     uint slus = ramAddr - 0x8000F800u;
-                    return $"jal 0x{ramAddr:X8} ({slus:X6}) [0x{ramAddr:X8}]";
+                    return $"jal 0x{ramAddr:X8} ({slus:X8}) [0x{ramAddr:X8}]";
                 }
 
             case 0x04: return $"beq {RegName(rs)}, {RegName(rt)}, {imm}";
@@ -358,13 +365,13 @@ FA FF 00 11
             {
                 uint ramAddr = ((addr26 << 2) | 0x80000000u);
                 uint slus = ramAddr - 0x8000F800u;
-                return $"j 0x{ramAddr:X8} ({slus:X6}) [0x{ramAddr:X8}]";
+                return $"j 0x{ramAddr:X8} ({slus:X8}) [0x{ramAddr:X8}]";
             }
             case 0x03: // jal
             {
                 uint ramAddr = ((addr26 << 2) | 0x80000000u);
                 uint slus = ramAddr - 0x8000F800u;
-                return $"jal 0x{ramAddr:X8} ({slus:X6}) [0x{ramAddr:X8}]";
+                return $"jal 0x{ramAddr:X8} ({slus:X8}) [0x{ramAddr:X8}]";
             }
             case 0x04: // beq
             {
@@ -373,7 +380,7 @@ FA FF 00 11
                 bool taken = RegValues[rsn] == RegValues[rtn];
                 uint targetRam = unchecked(currentRam + 4u + (uint)(imm * 4));
                 uint targetSlus = targetRam - 0x8000F800u;
-                return $"{(taken ? "[true]" : "[false]")} beq {rsn}, {rtn}, {imm} ({targetSlus:X6}) [0x{targetRam:X8}]";
+                return $"{(taken ? "[true]" : "[false]")} beq {rsn}, {rtn}, {imm} ({targetSlus:X8}) [0x{targetRam:X8}]";
             }
             case 0x05: // bne
             {
@@ -382,7 +389,7 @@ FA FF 00 11
                 bool taken = RegValues[rsn] != RegValues[rtn];
                 uint targetRam = unchecked(currentRam + 4u + (uint)(imm * 4));
                 uint targetSlus = targetRam - 0x8000F800u;
-                return $"{(taken ? "[true]" : "[false]")} bne {rsn}, {rtn}, {imm} ({targetSlus:X6}) [0x{targetRam:X8}]";
+                return $"{(taken ? "[true]" : "[false]")} bne {rsn}, {rtn}, {imm} ({targetSlus:X8}) [0x{targetRam:X8}]";
             }
             default:
                 // Fallback to non-PC-aware decoding for other opcodes
@@ -443,21 +450,20 @@ FA FF 00 11
             startWordIndex = checked((int)((routineAddr - baseAddr) / 4));
         }
 
-        int? endWordIndex = null;
+        int? finishWordIndex = null;
         if (!string.IsNullOrWhiteSpace(routineFinishHex))
         {
             var finishAddr = ParseAddr(routineFinishHex);
             if (finishAddr < baseAddr)
                 throw new InvalidOperationException("routineFinishHex é menor que a base (slusStartHex)");
-            endWordIndex = checked((int)((finishAddr - baseAddr) / 4));
+            finishWordIndex = checked((int)((finishAddr - baseAddr) / 4));
         }
 
         if (startWordIndex < 0 || startWordIndex > flatLines.Count)
             throw new ArgumentOutOfRangeException(nameof(routineStartHex), "Índice inicial fora do intervalo das linhas HEX.");
 
-        int takeCount = (endWordIndex is int e && e > startWordIndex && e <= flatLines.Count)
-            ? (e - startWordIndex)
-            : (flatLines.Count - startWordIndex);
+        // Do not cap by finish; allow surpassing and only stop when the exact finish index is executed
+        int takeCount = flatLines.Count - startWordIndex;
 
         var result = new List<string>(takeCount);
         int i = 0;
@@ -477,14 +483,22 @@ FA FF 00 11
             catch (Exception ex)
             {
                 string asmErr = $".error \"{ex.Message} (line: {originalHex})\"";
-                result.Add($"{originalHex}; {slus:X6}; {ram:X8}; {asmErr}");
+                result.Add($"{originalHex}; {slus:X8}; {ram:X8}; {asmErr}");
+                // If we just executed the finish address, stop
+                if (finishWordIndex is int f1 && globalIndex == f1) break;
                 i++;
                 continue;
             }
 
             // Decode with PC context
             string asm = DecodeWord(word, ram);
-            result.Add($"{originalHex}; {slus:X6}; {ram:X8}; {asm}");
+            result.Add($"{originalHex}; {slus:X8}; {ram:X8}; {asm}");
+
+            // If this instruction is at the finish address, stop after emitting it
+            if (finishWordIndex is int f && globalIndex == f)
+            {
+                break;
+            }
 
             // Branch/Jump flow control: if beq/bne is taken or j/jal, execute delay slot, then jump to target
             uint opcode = (word >> 26) & 0x3Fu;
@@ -533,7 +547,13 @@ FA FF 00 11
                         {
                             delayAsm = $".error \"{ex.Message} (line: {delayHex})\"";
                         }
-                        result.Add($"{delayHex}; {delaySlus:X6}; {delayRam:X8}; {delayAsm}");
+                        result.Add($"{delayHex}; {delaySlus:X8}; {delayRam:X8}; {delayAsm}");
+
+                        // If delay slot is the finish address, stop after emitting it
+                        if (finishWordIndex is int f2 && delayGlobalIndex == f2)
+                        {
+                            break;
+                        }
                     }
 
                     // Map target RAM to SLUS and index within flatLines
@@ -548,8 +568,9 @@ FA FF 00 11
                     }
                     else
                     {
-                        // Target out of range; stop execution
-                        break;
+                        // Target out of available lines; do not interrupt, just continue sequentially
+                        i++;
+                        continue;
                     }
                 }
             }
